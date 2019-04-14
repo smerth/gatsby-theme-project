@@ -1,0 +1,20 @@
+{
+  "name": "gatsby-site",
+  "version": "1.0.0",
+  "description": "A GatsbyJS site using a gatsby theme.",
+  "main": "gatsby-config.js",
+  "scripts": {
+    "develop": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stephen Merth <stephen.merth@gmail.com> (https://smerth.github.io/)",
+  "license": "MIT",
+  "dependencies": {
+    "gatsby": "^2.1.31",
+    "gatsby-theme-mdx-child": "*",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
+  }
+}

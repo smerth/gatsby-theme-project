@@ -1,0 +1,10 @@
+{
+  "private": "true",
+  "name": "theme-project",
+  "version": "1.0.0",
+  "workspaces": [
+    "gatsby-site",
+    "packages/*"
+  ],
+  "dependencies": {}
+}

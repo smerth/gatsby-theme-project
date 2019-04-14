@@ -1,0 +1,63 @@
+import { Box } from "gatsby-theme-mdx";
+
+# Documentation Homepage
+
+This documentation page resides @ `gatsby-site/docs`.
+
+The theme `gatsby-theme-mdx` enables MDX processing of markdown pages and defines components to be used in markdown (such as the box below,) as well as components that overwrite HTML tags like the above `<h1>`
+
+<Box title="Notes About Documentation">
+  Its important. Everything must be documented. Document. Document. Document.
+</Box>
+
+The child theme implements `gatsby-source-filesystem` so that `.mdx` files added to the docs folder in gatsby-site are added to the GraphQL. It also provides a template for those docs pages:
+
+```jsx
+import React from "react";
+import MDXRenderer from "gatsby-mdx/mdx-renderer";
+import { Layout } from "gatsby-theme-mdx";
+
+export default ({ pageContext }) => (
+  <Layout>
+    <MDXRenderer>{pageContext.body}</MDXRenderer>
+  </Layout>
+);
+```
+
+and a `gatsby-node.js` file to implement pageCreate
+
+```jsx
+exports.createPages = async ({ graphql, actions }) => {
+  const results = await graphql(`
+    {
+      allFile(filter: { sourceInstanceName: { eq: "docs" } }) {
+        edges {
+          node {
+            name
+            relativePath
+            childMdx {
+              code {
+                body
+              }
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  console.log(Object.keys(results));
+
+  const pages = results.data.allFile.edges.map(({ node }) => node);
+
+  pages.forEach(page => {
+    actions.createPage({
+      path: `documentation/${page.name}`,
+      component: require.resolve("./src/templates/doc.js"),
+      context: {
+        body: page.childMdx.code.body
+      }
+    });
+  });
+};
+```

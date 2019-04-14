@@ -1,0 +1,162 @@
+# 4) Replace HTML tags with react components in mdx files
+
+Next lets work with MDXProvider to over-ride elements in the markdown of `.mdx` files.
+
+Say we want to override all the h1 elements in all of our .mdx files and replace that element with a react component, we could make some changes to the layout component since it wraps all .mdx files.
+
+Aha, that layout component comes in useful after all!
+
+@ layout
+
+```jsx
+import {MDXProvider} from '@mdx-js/tag'
+```
+
+`@mdx-js/tag` takes over the rendering of tags from mdx core so this is how we can swap a component for an HTML element in our markdown
+
+First we can define the components we want to use:
+
+@ `layout`
+
+```jsx
+const components = {
+  h1: props => (
+    <h1 style={{ fontFamily: "System", fontSize: "4rem" }} {...props} />
+  )
+};
+```
+
+Then we wrap our layout with MDXProvider and pass in the map which tells `'@mdx-js/tag'` which component to swap for which element
+
+```jsx
+export default ({ children }) => (
+  <MDXProvider components={components}>
+    <section
+      style={{
+        display: "block",
+        maxWidth: "650px",
+        margin: "2rem auto"
+      }}
+    >
+      {children}
+    </section>
+  </MDXProvider>
+);
+```
+
+So all together `layout.js` looks like this
+
+@ layout.js
+
+```jsx
+import React from "react";
+import { MDXProvider } from "@mdx-js/tag";
+
+const systemFont =
+  '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
+
+const components = {
+  h1: props => (
+    <h1 style={{ fontFamily: systemFont, fontSize: "4rem" }}>
+      {props.children}
+    </h1>
+  ),
+  p: props => (
+    <p style={{ fontFamily: systemFont, fontSize: "22px" }} {...props} />
+  )
+};
+
+export default ({ children }) => (
+  <MDXProvider components={components}>
+    <section
+      style={{
+        display: "block",
+        maxWidth: "650px",
+        margin: "2rem auto"
+      }}
+    >
+      {children}
+    </section>
+  </MDXProvider>
+);
+
+```
+
+
+
+When you reboot the site you'll see the H1 tags are now rendered as our H1 component.
+
+> Note! 
+>
+> The mapping doesn't effect the contents of the Box component we use in our markdown.  If the box contains an `<h1>` tag it doesn't get swapped out for our newly defined H1 component. Whatever components you use in your markdown are injected "as is".
+
+
+
+## Move components to their own files
+
+Of course you can put the components in their own file.  If you do this you can then shadow them in the site code and modify the base appearance defined in the theme.
+
+Make a stand-alone H1 component
+
+@ `gatsby-theme-mdx/src/components/H1.js`
+
+```jsx
+import React from "react";
+import colors from "../tokens/colors";
+
+const systemFont =
+  '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
+
+export default ({ children }) => (
+  <h1
+    style={{
+      fontFamily: systemFont,
+      fontSize: "4rem",
+      color: colors.primary
+    }}
+  >
+    {children}
+  </h1>
+);
+```
+
+Now we can import the component into `layout.js` and map to the imported component for MDX to use.
+
+@ layout.js
+
+```jsx
+import React from "react";
+import { MDXProvider } from "@mdx-js/tag";
+import H1 from "./H1";
+
+const systemFont =
+  '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
+
+const components = {
+  h1: H1,
+  p: props => (
+    <p style={{ fontFamily: systemFont, fontSize: "22px" }} {...props} />
+  )
+};
+
+export default ({ children }) => (
+  <MDXProvider components={components}>
+    <section
+      style={{
+        display: "block",
+        maxWidth: "650px",
+        margin: "2rem auto"
+      }}
+    >
+      {children}
+    </section>
+  </MDXProvider>
+);
+
+```
+
+
+
+## Over-ride the tag component in the theme
+
+Now that the H1 component is a stand-alone component at `gatsby-theme-mdx/src/components/H1.js` you, or someone using your theme, can over-ride it in the site by placing a component called `H1.js` at `gatsby-site/src/gatsby-theme-mdx/components/H1.js`

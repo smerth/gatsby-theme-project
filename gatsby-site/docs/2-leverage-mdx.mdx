@@ -1,0 +1,265 @@
+# 2) Leveraging MDX
+
+Lets continue on and see what we get by adding MDX to our gatsby site using our theme.
+
+### Add a layout
+
+Lets add a layout for the site to the theme.  Your site may have a layout.  It probably should, and that layout will govern all the output throughout some section or perhaps all pages on the site.  However MDX allows you to add a layout for the output of the mdx files it processes.  If you site only contains mdx files mapped to pages on the site, this layout may be all you need to build the site out. 
+
+Add a  layout component
+
+@ gatsby-theme-mdx/src/components/layout.js
+
+```jsx
+import React from "react";
+
+export default ({ children }) => (
+  <section
+    style={{
+      display: "block",
+      maxWidth: "650px",
+      margin: "2rem auto"
+    }}
+  >
+    {children}
+  </section>
+);
+```
+
+
+
+Tell MDX about the layout
+
+@ gatsby-config.js
+
+```javascript
+  plugins: [
+    {
+      resolve: "gatsby-mdx",
+      options: {
+        defaultLayouts: {
+          default: require.resolve("./src/components/layout.js")
+        }
+      }
+    },
+```
+
+
+
+Reboot the site so it can find the layout
+
+```bash
+yarn workspace gatsby-site develop
+```
+
+There you go all MDX processed pages are now wrapped in the layout component
+
+
+
+### Import MDX files into MDX files
+
+6:00 
+
+copyright
+
+https://www.youtube.com/watch?v=d2sQiI5NFAM&list=PLV5CVI1eNcJgCrPH_e6d57KRUTiDZgs0u
+
+
+
+### Use a react component your mdx file
+
+Ok, so you are happily writing markdown and you want to add some object right there in the middle of the text, maybe slideshow, maybe a graph of some data.  Wouldn't it be great if you could build that thing as a react component and drop it into the text.
+
+Lets do that, lets make a box to hold some special content.
+
+Add a box component to the theme
+
+@ `gatsby-theme-mdx/src/components/alert-box.js`
+
+```jsx
+import React from "react";
+
+export default ({ children }) => (
+  <div
+    style={{
+      display: "block",
+      maxWidth: "550px",
+      margin: "2rem",
+      background: "red"
+    }}
+  >
+    {children}
+  </div>
+);
+```
+
+Now you can use the box component in `index.mdx`.  To use it, all you need to do is import it first.
+
+```markdown
+import Box from "../components/alert-box.js";
+
+# Hello World!
+
+This is some content that doesn't need to be in a box.
+
+<Box>This content does need to be in a box.</Box>
+
+This is some content that doesn't need to be in a box.
+
+```
+
+
+
+### Export a component from the theme
+
+That's great but having made that component in the theme, wouldn't it be good if we could use it in a markdown document in the gatsby-site (or, anywhere else in the site where we need the same box).  How to do that?
+
+First you can export the component from the theme.  For that NPM needs our package to have an index.js file…  so lets edit that.
+
+@ gatsby-theme-mdx/index.js
+
+```javascript
+export { default as Box } from "./src/components/alert-box";
+```
+
+Now lets create a new page in the gatsby-site
+
+@ `gatsby-site` 
+
+create `src/pages/about.mdx`.  Now we can import the component from the theme and use it directly in an mdx file in the  site!!!
+
+```markdown
+import { Box } from "gatsby-theme-mdx";
+
+# This is my about page
+
+This is some content that doesn't need to be in a box.
+
+<Box>Super duper.</Box>
+
+This is some content that doesn't need to be in a box.
+```
+
+Note that here we are importing the component from our theme.
+
+
+
+### Access .mdx metadata in the Gatsby site
+
+Add some metadata to `about.mdx`
+
+```markdown
+---
+title: The Amazing About Page
+---
+
+import { Box } from "gatsby-theme-mdx";
+
+# This is my about page
+
+This is some content that doesn't need to be in a box.
+
+<Box>Super duper.</Box>
+
+This is some content that doesn't need to be in a box.
+
+```
+
+You can query for that data in the Gatsby site
+
+```json
+{
+  sitePage(path: {regex: "/about/"}) {
+    context {
+      frontmatter {
+        title
+      }
+    }
+  }
+}
+```
+
+returns...
+
+```json
+{
+  "data": {
+    "sitePage": {
+      "context": {
+        "frontmatter": {
+          "title": "The Amazing About Page"
+        }
+      }
+    }
+  }
+}
+```
+
+or
+
+```json
+{
+  sitePage( path: {eq: "/"}) {
+    context {
+      frontmatter {
+        title
+      }
+    }
+  }
+}
+```
+
+returns
+
+```json
+{
+  "data": {
+    "sitePage": {
+      "context": {
+        "frontmatter": {
+          "title": "The Hello World Page"
+        }
+      }
+    }
+  }
+}
+```
+
+
+
+
+
+### Using design tokens in components
+
+A simple approach to using design tokens in components could be to add an object to the theme which contains various tokens
+
+@ `gatsby-theme-mdx/tokens/colors.js`
+
+```javascript
+export default {
+  primary: "tomato",
+  secondary: "aqua"
+};
+
+```
+
+now we can use this in the Box component directly
+
+```jsx
+import React from "react";
+import colors from "../tokens/colors";
+
+export default ({ children }) => (
+  <div
+    style={{
+      padding: "2rem",
+      background: colors.primary
+    }}
+  >
+    {children}
+  </div>
+);
+
+```
+
+

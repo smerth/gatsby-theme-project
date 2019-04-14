@@ -1,0 +1,26 @@
+{
+  "name": "gatsby-theme-mdx-child",
+  "version": "1.0.0",
+  "description": "A child theme of gatsby-theme-mdx",
+  "main": "index.js",
+  "dependencies": {
+    "gatsby-plugin-page-creator": "^2.0.10",
+    "gatsby-source-filesystem": "^2.0.26",
+    "gatsby-theme-mdx": "*"
+  },
+  "devDependencies": {
+    "gatsby": "^2.1.31",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
+  },
+  "peerDependencies": {
+    "gatsby": "^2.1.31",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stephen Merth <stephen.merth@gmail.com> (https://smerth.github.io/)",
+  "license": "MIT"
+}

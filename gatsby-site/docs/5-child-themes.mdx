@@ -1,0 +1,403 @@
+# 5) Child themes
+
+Lets say we want to build several sites. We want to add a theme to each of those sites so that they each get the same functionality.  However for a few of the sites we wish we could modify just some portion of the theme.
+
+It would be useful if we could make a child theme that would either override something from the first theme or maybe augment it.
+
+## Create child theme
+
+Lets make a child theme.  In the `packages` folder create new child theme folder
+
+```bash
+mkdir gatsby-theme-mdx-child
+```
+
+Go into the child theme folder
+
+```bash
+cd gatsby-theme-mdx-child
+```
+
+Intialize it for npm
+
+```bash
+npm init
+```
+
+Add the dev and peer dependancies we are using in our site.
+
+@ package.json
+
+```json
+{
+  "name": "gatsby-theme-mdx-child",
+  "version": "1.0.0",
+  "description": "A child theme of gatsby-theme-mdx",
+  "main": "index.js",
+  "devDependencies": {
+    "gatsby": "^2.1.31",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
+  },
+  "peerDependencies": {
+    "gatsby": "^2.1.31",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stephen Merth <stephen.merth@gmail.com> (https://smerth.github.io/)",
+  "license": "MIT"
+}
+```
+
+Add the main theme as  a dependancy so it gets installed if the child is installed
+
+```json
+"dependancies": {
+    "gatsby-theme-mdx": "*"
+}
+```
+
+Add `index.js` or the package won't resolved by yarn.
+
+Add `gatsby-config.js`
+
+```javascript
+module.exports = {
+  __experimentalThemes: ["gatsby-theme-mdx"]
+};
+```
+
+Here we have installed the first theme in the child theme
+
+You can add any number of other themes or plugins, etc...
+
+Just to see if everything is working lets set the gatsby-site to pull in the child theme
+
+@ `gatsby-site/gatsby-config.js`
+
+```javascript
+module.exports = {
+  __experimentalThemes: ["gatsby-theme-mdx-child"]
+};
+```
+
+Run yarn from the root to make sure everything in the workspaces is linked properly
+
+@ `theme-project`
+
+```bash
+yarn
+```
+
+Check the workspace dependancies
+
+```bash
+yarn workspaces info
+```
+
+Returns
+
+```bash
+{
+  "gatsby-site": {
+    "location": "gatsby-site",
+    "workspaceDependencies": [
+      "gatsby-theme-mdx-child"
+    ],
+    "mismatchedWorkspaceDependencies": []
+  },
+  "gatsby-theme-mdx-child": {
+    "location": "packages/gatsby-theme-mdx-child",
+    "workspaceDependencies": [
+      "gatsby-theme-mdx"
+    ],
+    "mismatchedWorkspaceDependencies": []
+  },
+  "gatsby-theme-mdx": {
+    "location": "packages/gatsby-theme-mdx",
+    "workspaceDependencies": [],
+    "mismatchedWorkspaceDependencies": []
+  }
+}
+```
+
+`gatsby-theme-mdx` not depending on anything
+
+`gatsby-theme-mdx-child` depends on `gatsby-theme-mdx`
+
+`gatsby-site` is pulling in `gatsby-theme-mdx-child`
+
+Everything looks good...
+
+So from the root:
+
+```bash
+yarn workspace gatsby-site develop
+```
+
+And the site is running fine.
+
+
+
+## Add mdx processing to the child theme
+
+First let's get the child theme processing `.mdx` files.
+
+Add page creator to the child theme
+
+```bash
+yarn workspace gatsby-theme-mdx-child add gatsby-plugin-page-creator
+```
+
+In the child theme, add the page creator and configure to source to the local pages folder
+
+@ gatsby-config.js
+
+```javascript
+module.exports = {
+  __experimentalThemes: ["gatsby-theme-mdx"],
+  plugins: [
+          // You can have multiple instances of this plugin
+    // to create pages from React components in different directories.
+    //
+    // The following sets up the pattern of having multiple
+    // "pages" directories in your project
+    {
+        resolve: `gatsby-plugin-page-creator`,
+        options: {
+          path: `${__dirname}/src/pages`
+        }
+      }
+  ]
+};
+
+```
+
+Test by adding a page
+
+@ `gatsby-theme-mdx-child/src/pages/test.mdx`
+
+```markdown
+---
+title: A truely amazing test page
+---
+
+import { Box } from "gatsby-theme-mdx";
+
+# This test page is truely amazing
+
+This is some content that doesn't need to be in a box.
+
+<Box>Yeah the test page is live!!!</Box>
+
+This is some content that doesn't need to be in a box.
+
+```
+
+So we have the child theme processing MDX files from the `src/pages/` directory within itself. 
+
+
+
+## Add a basic documentation setup to the child theme
+
+Now, lets say we want this child theme to add functionality to the gatsby-site so that the user of gatsby-site can just add the theme and add a docs folder to the site and then start writing `.mdx` files in the `docs` folder and have those mdx files in `docs` processed to pages.
+
+Lets set up the child theme to process a folder of `.mdx` files in the site.
+
+@ gatsby-site add `docs/home.mdx`
+
+```markdown
+# Documentation Homepage
+
+Some meaningful writing!
+```
+
+To generate pages programatically we need to add `gatsby-source-filesystem` to the child theme so that the  designated `.mdx` files will be added to the GatsbyJS data graph
+
+add `gatsby-source-filesystem` to child theme
+
+```bash
+yarn workspace gatsby-theme-mdx-child add gatsby-source-filesystem
+```
+
+Next configure it to point to the docs folder
+
+@ `gatsby-theme-mdx-child/gatsby-config.js`
+
+```javascript
+    // source files
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: "docs",
+        // this path is relative to the gatsby site running the child theme
+        path: `docs`
+      }
+    }
+```
+
+Even though we are placing this config in the child theme the path here is relative to the gatsby site in which the theme is installed. So we are saying site for these files.
+
+Now the `.mdx` files @ `gatsby-site/docs` in the site should be added as nodes to Gatsby's GraphQL.
+
+We can find them with this query.  GraphQL query:
+
+```json
+{
+  allFile(filter: {sourceInstanceName: {eq: "docs"}}) {
+    edges {
+      node {
+        name
+        relativePath
+        childMdx {
+          code {
+            body
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+returns
+
+```json
+{
+  "data": {
+    "allFile": {
+      "edges": [
+        {
+          "node": {
+            "name": "home",
+            "relativePath": "home.mdx",
+            "childMdx": {
+              "code": {
+                "body": "function _typeof(obj) { if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction ...
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+The key to understanding this GraphQL query is `sourceInstanceName`.
+
+`sourceInstanceName` is in fact the name we asigned to the path where `gatsby-source-filesystem` is looking for files, namely: "docs"
+
+So we can filter on "docs" to get all the files in that folder: `(filter: {sourceInstanceName: {eq: "docs"}})`
+
+So moving on...
+
+Before we add a template for the mdx files in docs, let's export our `Layout` component from `gatbsy-theme-mdx` so we can use it in our template.
+
+@ `gatsby-theme-mdx/index.js`
+
+```javascript
+// Components
+export { default as Box } from "./src/components/alert-box";
+export { default as Layout } from "./src/components/layout";
+// Design Tokens
+export { default as colors } from "./src/tokens/colors";
+```
+
+
+
+Next we create a template to process the content of our mdx files.
+
+@ `gatsby-theme-mdx-child/src/templates/doc.js`
+
+```jsx
+import React from "react";
+import MDXRenderer from "gatsby-mdx/mdx-renderer";
+import { Layout } from "gatsby-theme-mdx";
+
+export default ({ pageContext }) => (
+  <Layout>
+    <MDXRenderer>{pageContext.body}</MDXRenderer>
+  </Layout>
+);
+
+```
+
+The thing to note here is the use of `MDXRenderer` .
+
+Now all that remains is to create pages. 
+
+## Programmatically create pages
+
+
+
+Add `gatsby-node.js` file at the root of the child theme
+
+@ `gatsby-theme-mdx-child/gatsby-config.js`
+
+```jsx
+exports.createPages = async ({ graphql, actions }) => {
+  const results = await graphql(`
+    {
+      allFile(filter: { sourceInstanceName: { eq: "docs" } }) {
+        edges {
+          node {
+            name
+            relativePath
+            childMdx {
+              code {
+                body
+              }
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  console.log(Object.keys(results));
+
+  const pages = results.data.allFile.edges.map(({ node }) => node);
+
+  pages.forEach(page => {
+    actions.createPage({
+      path: `documentation/${page.name}`,
+      component: require.resolve("./src/templates/doc.js"),
+      context: {
+        body: page.childMdx.code.body
+      }
+    });
+  });
+};
+
+```
+
+
+
+# Conclusion
+
+
+
+And there we have it!
+
+OK, so that was alot of stuff...   Exactly what stuff have we accomplished?
+
+- We have a `gatsby-theme-mdx`. 
+  - It adds MDX processing to a gatsby site
+  - It adds and exports some design tokens that can be consumed in the site
+  - It adds components to be used in a markdown document
+  - it adds components to override HTML tags in a markdown document
+- We have a `gatsby-theme-mdx-child` theme which adds MDX processing based of a `docs` file in the site
+- We have a gatsby site that contains 3 files: `gatsby-config.js`, `gatsby-node.js` and a docs folder
+
+The main point here was not to build a useful and functional website or app.  The point was to show the way in which Gatsby themes can be used to build sites with remarkably flexible and useful architecture.  
+
+And in addition to show how MDX is a very powerful tool for turning markdown into an accessible source of textual data.
+
+That's the tip of the iceberg, watch this space!
+
+
+

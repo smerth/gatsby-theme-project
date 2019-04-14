@@ -1,0 +1,103 @@
+# 3) Shadowing Everything
+
+It is easy to imagine a situation where the publisher of a theme would want a the user of the theme in a Gatsby site to be able to over-ride what the theme provides.  
+
+There are many cases of mulitple sites employing the same functionality and differing from each other in only small details of implementation.
+
+How can a user take advantage of a Gatsby theme and only over-ride specific bits of functionality.
+
+## What is shadowing?
+
+Shadowing is the concept of over-riding a file or component in the theme with one in the site. This is accomplished by placing an identically named item in the site at the same path an the file already in the theme.
+
+An example will make this clearer: 
+
+## Shadow a file
+
+@ gatsby-site create `src/pages/index.mdx` and edit it to contain `# Holy Jellybeans!`
+
+Its as simple as that, the site now displays the content of the `index.js` file in the `site/src/pages` folder which overrides the `theme/src/pages` file.
+
+Now delete the file from `site/src/pages`...
+
+> Note that: If you have over-ridden something and remove the over-ride file of component you need to delete the cache and reboot the site to see the change take place.
+>
+> ```bash
+> rm -rf gatsby-site/.cache/
+> ```
+
+
+
+Another expample would be to override the colors tokens
+
+@ `gatsby-site/src` create `gatsby-theme-mdx` folder
+
+anything placed in this new folder will override the file found in the `theme/src` folder.
+
+So lets override `gatsby-theme-mdx/src/tokens/color.js` by placing a `colors.js` file at `gatsby-site/src/gatsby-theme-mdx/tokens/`
+
+In this new `colors.js` file we can change the colors.
+
+```javascript
+export default {
+  primary: "#fb6d8c", // Green
+  secondary: "#1069c9", // Denim
+  alert: "#ed7d30"
+};
+
+```
+
+reboot..
+
+Now all components that were pulling in color tokens from the theme colors.js file will be instead pulling in their colors from the site `colors.js` file
+
+This strategy applies to **everything** in `src` in the theme...
+
+## Component Shadowing
+
+OK we can override a file in the theme by placing another file in the site at the same path.  We can also do this with components.  Say we want to use all the components in the theme, as is, but we want to change one, how would we do that?
+
+By shadowing the path to a component in the theme with the path to a component with the same name in the site we can override the theme component
+
+First lets export colors from the theme so we can use those color tokens not just in the theme but also in components in the site
+
+@ `gatsby-theme-mdx/index.js`
+
+```javascript
+// Components
+export { default as Box } from "./src/components/alert-box";
+
+// Design tokens
+export { default as colors } from "./src/tokens/colors";
+```
+
+Now lets create a new alert-box.js component in the site to "shadow" the component in the theme.
+
+@ `gatsby-site/src/gatsby-theme-mdx/components/` create `alert-box.js`
+
+```jsx
+import React from "react";
+import { colors } from "gatsby-theme-mdx";
+
+export default ({ children }) => (
+  <div
+    style={{
+      padding: "2rem",
+      background: colors.secondary
+    }}
+  >
+    <h2>Hey! This is important.</h2>
+    {children}
+  </div>
+);
+```
+
+Note we're pulling the colors in from the theme where we exported them.
+
+
+
+>  Important!
+>
+> SM - Note this new component we have defined in the site completely overrides the file it shadows (Gatsby doesn't doesn't merge the files… it overrides,... although that may be a future goal of the theming strategy.)
+
+

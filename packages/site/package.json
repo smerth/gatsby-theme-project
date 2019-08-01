@@ -1,5 +1,6 @@
 {
-  "name": "gatsby-site",
+  "private": "true",
+  "name": "site",
   "version": "1.0.0",
   "description": "A GatsbyJS site using a gatsby theme.",
   "main": "gatsby-config.js",
@@ -7,6 +8,8 @@
     "develop": "gatsby develop",
     "build": "gatsby build",
     "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "info": "gatsby info",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Stephen Merth <stephen.merth@gmail.com> (https://smerth.github.io/)",

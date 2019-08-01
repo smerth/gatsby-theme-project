@@ -7,9 +7,7 @@ exports.createPages = async ({ graphql, actions }) => {
             name
             relativePath
             childMdx {
-              code {
-                body
-              }
+              body
             }
           }
         }
@@ -26,7 +24,7 @@ exports.createPages = async ({ graphql, actions }) => {
       path: `documentation/${page.name}`,
       component: require.resolve("./src/templates/doc.js"),
       context: {
-        body: page.childMdx.code.body
+        body: page.childMdx.body
       }
     });
   });

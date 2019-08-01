@@ -9,22 +9,23 @@
   "author": "Stephen Merth <stephen.merth@gmail.com> (https://smerth.github.io/)",
   "license": "MIT",
   "devDependencies": {
-    "gatsby": "^2.1.31",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "gatsby": "^2.13.50",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   },
   "peerDependencies": {
-    "gatsby": "^2.1.31",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "gatsby": "^2.13.50",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   },
   "dependencies": {
-    "@mdx-js/mdx": "^0.20.3",
+    "@mdx-js/mdx": "^1.1.4",
+    "@mdx-js/react": "^1.1.4",
     "@mdx-js/tag": "^0.20.3",
-    "gatsby-mdx": "^0.4.3",
-    "gatsby-plugin-page-creator": "^2.0.10",
-    "gatsby-remark-prismjs": "^3.2.8",
-    "prismjs": "^1.16.0",
-    "styled-components": "^4.2.0"
+    "gatsby-plugin-mdx": "^1.0.22",
+    "gatsby-plugin-page-creator": "^2.1.5",
+    "gatsby-remark-prismjs": "^3.3.4",
+    "prismjs": "^1.17.1",
+    "styled-components": "^4.3.2"
   }
 }

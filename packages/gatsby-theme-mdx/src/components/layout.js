@@ -1,5 +1,6 @@
 import React from "react";
-import { MDXProvider } from "@mdx-js/tag";
+// import { MDXProvider } from "@mdx-js/tag";
+import { MDXProvider } from "@mdx-js/react";
 import H1 from "./H1";
 import H2 from "./H2";
 import styled from "styled-components";

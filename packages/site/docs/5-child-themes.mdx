@@ -9,13 +9,13 @@ It would be useful if we could make a child theme that would either override som
 Lets make a child theme. In the `packages` folder create new child theme folder
 
 ```bash
-mkdir gatsby-theme-mdx-child
+mkdir gatsby-theme-main-subtheme
 ```
 
 Go into the child theme folder
 
 ```bash
-cd gatsby-theme-mdx-child
+cd gatsby-theme-main-subtheme
 ```
 
 Intialize it for npm
@@ -30,9 +30,9 @@ Add the dev and peer dependancies we are using in our site.
 
 ```json
 {
-  "name": "gatsby-theme-mdx-child",
+  "name": "gatsby-theme-main-subtheme",
   "version": "1.0.0",
-  "description": "A child theme of gatsby-theme-mdx",
+  "description": "A child theme of gatsby-theme-main",
   "main": "index.js",
   "devDependencies": {
     "gatsby": "^2.1.31",
@@ -56,7 +56,7 @@ Add the main theme as a dependancy so it gets installed if the child is installe
 
 ```json
 "dependancies": {
-    "gatsby-theme-mdx": "*"
+    "gatsby-theme-main": "*"
 }
 ```
 
@@ -66,7 +66,7 @@ Add `gatsby-config.js`
 
 ```javascript
 module.exports = {
-  plugins: ["gatsby-theme-mdx"],
+  plugins: ["gatsby-theme-main"],
 };
 ```
 
@@ -80,7 +80,7 @@ Just to see if everything is working lets set the gatsby-site to pull in the chi
 
 ```javascript
 module.exports = {
-  plugins: ["gatsby-theme-mdx-child"],
+  plugins: ["gatsby-theme-main-subtheme"],
 };
 ```
 
@@ -105,30 +105,30 @@ Returns
   "gatsby-site": {
     "location": "gatsby-site",
     "workspaceDependencies": [
-      "gatsby-theme-mdx-child"
+      "gatsby-theme-main-subtheme"
     ],
     "mismatchedWorkspaceDependencies": []
   },
-  "gatsby-theme-mdx-child": {
-    "location": "packages/gatsby-theme-mdx-child",
+  "gatsby-theme-main-subtheme": {
+    "location": "packages/gatsby-theme-main-subtheme",
     "workspaceDependencies": [
-      "gatsby-theme-mdx"
+      "gatsby-theme-main"
     ],
     "mismatchedWorkspaceDependencies": []
   },
-  "gatsby-theme-mdx": {
-    "location": "packages/gatsby-theme-mdx",
+  "gatsby-theme-main": {
+    "location": "packages/gatsby-theme-main",
     "workspaceDependencies": [],
     "mismatchedWorkspaceDependencies": []
   }
 }
 ```
 
-`gatsby-theme-mdx` not depending on anything
+`gatsby-theme-main` not depending on anything
 
-`gatsby-theme-mdx-child` depends on `gatsby-theme-mdx`
+`gatsby-theme-main-subtheme` depends on `gatsby-theme-main`
 
-`gatsby-site` is pulling in `gatsby-theme-mdx-child`
+`gatsby-site` is pulling in `gatsby-theme-main-subtheme`
 
 Everything looks good...
 
@@ -147,7 +147,7 @@ First let's get the child theme processing `.mdx` files.
 Add page creator to the child theme
 
 ```bash
-yarn workspace gatsby-theme-mdx-child add gatsby-plugin-page-creator
+yarn workspace gatsby-theme-main-subtheme add gatsby-plugin-page-creator
 ```
 
 In the child theme, add the page creator and configure to source to the local pages folder
@@ -157,7 +157,7 @@ In the child theme, add the page creator and configure to source to the local pa
 ```javascript
 module.exports = {
   plugins: [
-    ["gatsby-theme-mdx"],
+    ["gatsby-theme-main"],
     // You can have multiple instances of this plugin
     // to create pages from React components in different directories.
     //
@@ -175,14 +175,14 @@ module.exports = {
 
 Test by adding a page
 
-@ `gatsby-theme-mdx-child/src/pages/test.mdx`
+@ `gatsby-theme-main-subtheme/src/pages/test.mdx`
 
 ```markdown
 ---
 title: A truely amazing test page
 ---
 
-import { Box } from "gatsby-theme-mdx";
+import { Box } from "gatsby-theme-main";
 
 # This test page is truely amazing
 
@@ -214,12 +214,12 @@ To generate pages programatically we need to add `gatsby-source-filesystem` to t
 add `gatsby-source-filesystem` to child theme
 
 ```bash
-yarn workspace gatsby-theme-mdx-child add gatsby-source-filesystem
+yarn workspace gatsby-theme-main-subtheme add gatsby-source-filesystem
 ```
 
 Next configure it to point to the docs folder
 
-@ `gatsby-theme-mdx-child/gatsby-config.js`
+@ `gatsby-theme-main-subtheme/gatsby-config.js`
 
 ```javascript
     // source files
@@ -291,7 +291,7 @@ So moving on...
 
 Before we add a template for the mdx files in docs, let's export our `Layout` component from `gatbsy-theme-mdx` so we can use it in our template.
 
-@ `gatsby-theme-mdx/index.js`
+@ `gatsby-theme-main/index.js`
 
 ```javascript
 // Components
@@ -303,12 +303,12 @@ export { default as colors } from "./src/tokens/colors";
 
 Next we create a template to process the content of our mdx files.
 
-@ `gatsby-theme-mdx-child/src/templates/doc.js`
+@ `gatsby-theme-main-subtheme/src/templates/doc.js`
 
 ```javascript
 import React from "react";
 import MDXRenderer from "gatsby-mdx/mdx-renderer";
-import { Layout } from "gatsby-theme-mdx";
+import { Layout } from "gatsby-theme-main";
 
 export default ({ pageContext }) => (
   <Layout>
@@ -325,7 +325,7 @@ Now all that remains is to create pages.
 
 Add `gatsby-node.js` file at the root of the child theme
 
-@ `gatsby-theme-mdx-child/gatsby-config.js`
+@ `gatsby-theme-main-subtheme/gatsby-config.js`
 
 ```javascript
 exports.createPages = async ({ graphql, actions }) => {
@@ -369,12 +369,12 @@ And there we have it!
 
 OK, so that was alot of stuff... Exactly what stuff have we accomplished?
 
-- We have a `gatsby-theme-mdx`.
+- We have a `gatsby-theme-main`.
   - It adds MDX processing to a gatsby site
   - It adds and exports some design tokens that can be consumed in the site
   - It adds components to be used in a markdown document
   - it adds components to override HTML tags in a markdown document
-- We have a `gatsby-theme-mdx-child` theme which adds MDX processing based of a `docs` file in the site
+- We have a `gatsby-theme-main-subtheme` theme which adds MDX processing based of a `docs` file in the site
 - We have a gatsby site that contains 3 files: `gatsby-config.js`, `gatsby-node.js` and a docs folder
 
 The main point here was not to build a useful and functional website or app. The point was to show the way in which Gatsby themes can be used to build sites with remarkably flexible and useful architecture.

@@ -1,12 +1,12 @@
 {
-  "name": "gatsby-theme-mdx-child",
+  "name": "gatsby-theme-main-subtheme",
   "version": "1.0.0",
-  "description": "A child theme of gatsby-theme-mdx",
+  "description": "A child theme of gatsby-theme-main",
   "main": "index.js",
   "dependencies": {
     "gatsby-plugin-page-creator": "^2.1.5",
     "gatsby-source-filesystem": "^2.1.8",
-    "gatsby-theme-mdx": "*"
+    "gatsby-theme-main": "*"
   },
   "devDependencies": {
     "gatsby": "^2.13.50",

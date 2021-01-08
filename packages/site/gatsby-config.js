@@ -1,3 +1,3 @@
 module.exports = {
-  plugins: ["gatsby-theme-mdx-child"],
+  plugins: ["gatsby-theme-main-subtheme"],
 };

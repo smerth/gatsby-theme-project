@@ -1,6 +1,6 @@
 module.exports = {
   plugins: [
-    "gatsby-theme-mdx",
+    "gatsby-theme-main",
     // You can have multiple instances of this plugin
     // to create pages from React components in different directories.
     //

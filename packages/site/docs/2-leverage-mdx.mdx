@@ -8,7 +8,7 @@ Lets add a layout for the site to the theme. Your site may have a layout. It pro
 
 Add a layout component
 
-@ gatsby-theme-mdx/src/components/layout.js
+@ gatsby-theme-main/src/components/layout.js
 
 ```javascript
 import React from "react";
@@ -66,7 +66,7 @@ Lets do that, lets make a box to hold some special content.
 
 Add a box component to the theme
 
-@ `gatsby-theme-mdx/src/components/alert-box.js`
+@ `gatsby-theme-main/src/components/alert-box.js`
 
 ```javascript
 import React from "react";
@@ -105,7 +105,7 @@ That's great but having made that component in the theme, wouldn't it be good if
 
 First you can export the component from the theme. For that NPM needs our package to have an index.js file… so lets edit that.
 
-@ gatsby-theme-mdx/index.js
+@ gatsby-theme-main/index.js
 
 ```javascript
 export { default as Box } from "./src/components/alert-box";
@@ -118,7 +118,7 @@ Now lets create a new page in the gatsby-site
 create `src/pages/about.mdx`. Now we can import the component from the theme and use it directly in an mdx file in the site!!!
 
 ```markdown
-import { Box } from "gatsby-theme-mdx";
+import { Box } from "gatsby-theme-main";
 
 # This is my about page
 
@@ -140,7 +140,7 @@ Add some metadata to `about.mdx`
 title: The Amazing About Page
 ---
 
-import { Box } from "gatsby-theme-mdx";
+import { Box } from "gatsby-theme-main";
 
 # This is my about page
 
@@ -215,7 +215,7 @@ returns
 
 A simple approach to using design tokens in components could be to add an object to the theme which contains various tokens
 
-@ `gatsby-theme-mdx/tokens/colors.js`
+@ `gatsby-theme-main/tokens/colors.js`
 
 ```javascript
 export default {

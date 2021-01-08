@@ -1,5 +1,5 @@
 import React from "react";
-import { colors } from "gatsby-theme-mdx";
+import { colors } from "gatsby-theme-main";
 
 const systemFont =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
@@ -9,7 +9,7 @@ export default ({ children }) => (
     style={{
       fontFamily: systemFont,
       fontSize: "4rem",
-      color: colors.primary
+      color: colors.primary,
     }}
   >
     {children}

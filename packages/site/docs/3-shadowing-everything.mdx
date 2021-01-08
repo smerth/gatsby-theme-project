@@ -28,11 +28,11 @@ Now delete the file from `site/src/pages`...
 
 Another expample would be to override the colors tokens
 
-@ `gatsby-site/src` create `gatsby-theme-mdx` folder
+@ `gatsby-site/src` create `gatsby-theme-main` folder
 
 anything placed in this new folder will override the file found in the `theme/src` folder.
 
-So lets override `gatsby-theme-mdx/src/tokens/color.js` by placing a `colors.js` file at `gatsby-site/src/gatsby-theme-mdx/tokens/`
+So lets override `gatsby-theme-main/src/tokens/color.js` by placing a `colors.js` file at `gatsby-site/src/gatsby-theme-main/tokens/`
 
 In this new `colors.js` file we can change the colors.
 
@@ -58,7 +58,7 @@ By shadowing the path to a component in the theme with the path to a component w
 
 First lets export colors from the theme so we can use those color tokens not just in the theme but also in components in the site
 
-@ `gatsby-theme-mdx/index.js`
+@ `gatsby-theme-main/index.js`
 
 ```javascript
 // Components
@@ -70,11 +70,11 @@ export { default as colors } from "./src/tokens/colors";
 
 Now lets create a new alert-box.js component in the site to "shadow" the component in the theme.
 
-@ `gatsby-site/src/gatsby-theme-mdx/components/` create `alert-box.js`
+@ `gatsby-site/src/gatsby-theme-main/components/` create `alert-box.js`
 
 ```javascript
 import React from "react";
-import { colors } from "gatsby-theme-mdx";
+import { colors } from "gatsby-theme-main";
 
 export default ({ children }) => (
   <div

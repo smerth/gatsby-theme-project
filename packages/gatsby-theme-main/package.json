@@ -1,5 +1,5 @@
 {
-  "name": "gatsby-theme-mdx",
+  "name": "gatsby-theme-main",
   "version": "1.0.0",
   "description": "A GatsbyJS theme to implement MDX processing of markdown files.",
   "main": "index.js",

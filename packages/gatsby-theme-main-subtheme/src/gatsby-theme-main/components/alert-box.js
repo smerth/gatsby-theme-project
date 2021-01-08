@@ -1,5 +1,5 @@
 import React from "react";
-import { colors } from "gatsby-theme-mdx";
+import { colors } from "gatsby-theme-main";
 
 function AlertBox(props) {
   const { children } = props;
@@ -7,7 +7,7 @@ function AlertBox(props) {
     <div
       style={{
         padding: "2rem",
-        background: colors.alert
+        background: colors.alert,
       }}
     >
       {props.title && <h2>{props.title}</h2>}

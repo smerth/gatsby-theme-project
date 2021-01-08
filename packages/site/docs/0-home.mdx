@@ -1,10 +1,10 @@
-import { Box } from "gatsby-theme-mdx";
+import { Box } from "gatsby-theme-main";
 
 # Documentation Homepage
 
 This documentation page resides @ `gatsby-site/docs`.
 
-The theme `gatsby-theme-mdx` enables MDX processing of markdown pages and defines components to be used in markdown (such as the box below,) as well as components that overwrite HTML tags like the above `<h1>`
+The theme `gatsby-theme-main` enables MDX processing of markdown pages and defines components to be used in markdown (such as the box below,) as well as components that overwrite HTML tags like the above `<h1>`
 
 <Box title="Notes About Documentation">
   Its important. Everything must be documented. Document. Document. Document.
@@ -15,7 +15,7 @@ The child theme implements `gatsby-source-filesystem` so that `.mdx` files added
 ```javascript
 import React from "react";
 import MDXRenderer from "gatsby-mdx/mdx-renderer";
-import { Layout } from "gatsby-theme-mdx";
+import { Layout } from "gatsby-theme-main";
 
 export default ({ pageContext }) => (
   <Layout>

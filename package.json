@@ -1,6 +1,9 @@
 {
   "private": "true",
-  "name": "gatsby-theming-project",
+  "name": "gatsby-sub-theming-demo",
+  "description": "A gatsby site, a main theme and a sub-theme, demonstrating theming and sub-theming.",
+  "author": "Stephen Merth <stephen.merth@gmail.com> (https://smerth.github.io/)",
+  "license": "MIT",
   "version": "1.0.0",
   "scripts": {
     "develop": "yarn workspace site develop",

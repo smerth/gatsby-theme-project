@@ -6,34 +6,26 @@ This repo demonstrates some of the ways you can configure your setup to develop 
 
 The repo consists of three `yarn` workspaces:
 
-1) `yarn workspace gatsby-site` 
+1. `yarn workspace gatsby-site`
 
 A gatsby site using the theme and a child of that theme
 
-2) `yarn workspace gatsby-theme-mdx`
+2. `yarn workspace gatsby-theme-main`
 
-A theme for gatsby that demonstrates several things. 
+A theme for gatsby that demonstrates several things.
 
-- Process `.mdx` files. 
-- Shadow folders, files and components in the theme with items at their equivalent path in the parent gatsby-site. 
+- Process `.mdx` files.
+- Shadow folders, files and components in the theme with items at their equivalent path in the parent gatsby-site.
 - Export components and design tokens from the theme.
 
-3) `yarn workspace gatsby-theme-mdx-child`
+3. `yarn workspace gatsby-theme-main-subtheme`
 
-A child theme that programatically generates pages from a `docs` folder of `.mdx` files in the parent gatsby-site. The child theme provides all the setup for this 
-
-
+A child theme that programatically generates pages from a `docs` folder of `.mdx` files in the parent gatsby-site. The child theme provides all the setup for this
 
 ## Setup and use
 
-
-
-
-
-
-
 ## Documents
 
-This repo was built following the live code cast: 
+This repo was built following the live code cast:
 
-The docs folder contains a walk-through of how to build this repo.  
+The docs folder contains a walk-through of how to build this repo.

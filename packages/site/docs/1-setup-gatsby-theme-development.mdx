@@ -71,10 +71,10 @@ cd packages
 Make a folder for the theme we will develop.
 
 ```bash
-mkdir gatsby-theme-mdx
+mkdir gatsby-theme-main
 ```
 
-We'll call it `gatsby-theme-mdx` because it will add basic `mdx` processing of markdown files to a GatsbyJS site.
+We'll call it `gatsby-theme-main` because it will add basic `mdx` processing of markdown files to a GatsbyJS site.
 
 > Important!
 >
@@ -83,7 +83,7 @@ We'll call it `gatsby-theme-mdx` because it will add basic `mdx` processing of m
 > However, a gatsby theme adds functionality to a Gatsby site. It might be a set of design tokens and assets and components that define the look and feel of a site, but you should think of it as a packaging up of any functionality you might want to add to more than one site.
 
 ```bash
-cd gatsby-theme-mdx
+cd gatsby-theme-main
 ```
 
 Our theme is a NPM module so we need to init
@@ -96,7 +96,7 @@ Respond as usual to the prompts
 
 ```json
 {
-  "name": "gatsby-theme-mdx",
+  "name": "gatsby-theme-main",
   "version": "1.0.0",
   "description": "A GatsbyJS theme to implement MDX processing of markdown files.",
   "main": "index.js",
@@ -168,7 +168,7 @@ So, now we have this tree:
 ├── gatsby-site
 │   └── package.json
 └── packages
-    └── gatsby-theme-mdx
+    └── gatsby-theme-main
         ├── index.js
         └── package.json
 ```
@@ -183,7 +183,7 @@ Here is where we begin to use workspaces. We have three different places contain
 
 - Our `theme-project` folder. This is where we define our workspaces.
 - Our `gatsby-site` folder.
-- Our `gatsby-theme-mdx` folder where we will build a theme.
+- Our `gatsby-theme-main` folder where we will build a theme.
 
 It would be painful to have to `cd` into these folders or specify their path everytime we wanted to execute a `yarn` command relative to each of those folders. But since we defined the workspaces we can execute `yarn` commands in any workspace using a simple referencing the workspace. Like this:
 
@@ -201,12 +201,12 @@ Now lets add the theme to the Gatsby site. We can add it as a dependancy:
 ...
   "dependencies": {
     "gatsby": "^2.1.31",
-    "gatsby-theme-mdx": "*"
+    "gatsby-theme-main": "*"
   }
 }
 ```
 
-We add this as a dependancy to the `package.json ` file because the module is stored locally in our "packages" folder. If we try `yarn add gatsby-theme-mdx` yarn will try first to find the module on npm. If your package in develpment has the same name as a package on npm the wrong one will be loaded into your project…
+We add this as a dependancy to the `package.json ` file because the module is stored locally in our "packages" folder. If we try `yarn add gatsby-theme-main` yarn will try first to find the module on npm. If your package in develpment has the same name as a package on npm the wrong one will be loaded into your project…
 
 Obviously, our theme is not on npm but it is in the `packages` folder and it does have a valid entry point so yarn will find it when we add it as a dependancy.
 
@@ -230,16 +230,16 @@ Lets add GatsbyJS as a dev dependancy to the theme.
 @ theme-project
 
 ```bash
-yarn workspace gatsby-theme-mdx add gatsby -D
+yarn workspace gatsby-theme-main add gatsby -D
 ```
 
 Now lets edit the theme package.json to add gatsby as a peer dependancy also, just copy the `devDependancy` block and rename it peer
 
-@ gatsby-theme-mdx/package.json
+@ gatsby-theme-main/package.json
 
 ```json
 {
-  "name": "gatsby-theme-mdx",
+  "name": "gatsby-theme-main",
   "version": "1.0.0",
   "description": "A GatsbyJS theme to implement MDX processing of markdown files.",
   "main": "index.js",
@@ -260,16 +260,16 @@ Now lets edit the theme package.json to add gatsby as a peer dependancy also, ju
 Also our theme will need `react` and `react-dom`
 
 ```bash
-yarn workspace gatsby-theme-mdx add react react-dom -D
+yarn workspace gatsby-theme-main add react react-dom -D
 ```
 
 And they should also be declared as `dev` and `peer` dependancies
 
-@ gatsby-theme-mdx/package.json
+@ gatsby-theme-main/package.json
 
 ```json
 {
-  "name": "gatsby-theme-mdx",
+  "name": "gatsby-theme-main",
   "version": "1.0.0",
   "description": "A GatsbyJS theme to implement MDX processing of markdown files.",
   "main": "index.js",
@@ -312,13 +312,13 @@ In the theme create `src/pages/index.mdx`
 Now lets add MDX modules to the theme
 
 ```bash
-yarn workspace gatsby-theme-mdx add gatsby-mdx
+yarn workspace gatsby-theme-main add gatsby-mdx
 ```
 
 And we also need to add these dependancies
 
 ```bash
-yarn workspace gatsby-theme-mdx add @mdx-js/mdx @mdx-js/tag
+yarn workspace gatsby-theme-main add @mdx-js/mdx @mdx-js/tag
 ```
 
 This is because `gatsby-mdx` is designed to allow for swapping out various processing modules for greater flexibility. We are going to process `.mdx` files, for which `gatsby-mdx` will use `@mdx-js/mdx` and we are going to replace HTML tags in markdown (like `h1`) with react components we get to define, and for that `gatsby-mdx` will use `@mdx-js/tag`.
@@ -345,12 +345,12 @@ We need to tell Gatsby to look in another location for files to process (specfic
 Lets install that in our theme.
 
 ```bash
-yarn workspace gatsby-theme-mdx add gatsby-plugin-page-creator
+yarn workspace gatsby-theme-main add gatsby-plugin-page-creator
 ```
 
 After we install any Gatsby plugin we need to make Gatsby aware of it,... so lets do that
 
-@ `gatsby-theme-mdx/gatsby-config.js`
+@ `gatsby-theme-main/gatsby-config.js`
 
 ```javascript
 module.exports = {
@@ -394,7 +394,7 @@ and add the theme...
 
 ```javascript
 module.exports = {
-  plugins: ["gatsby-theme-mdx"],
+  plugins: ["gatsby-theme-main"],
 };
 ```
 

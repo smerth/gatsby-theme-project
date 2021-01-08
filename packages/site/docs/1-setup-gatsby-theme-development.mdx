@@ -1,12 +1,10 @@
 # 1) Setup for theme development
 
+We are going to create two folders. One will hold the gatsby site and one will hold the theme we are going to build. We know that eventually the theme will end up being a package on [NPM](https://www.npmjs.com/) which anyone can install in their GatsbyJS site. Whatever functionality the theme defines will then be available in their site.
 
-We are going to create two folders.  One will hold the gatsby site and one will hold the theme we are going to build.  We know that eventually the theme will end up being a package on [NPM](https://www.npmjs.com/) which anyone can install in their GatsbyJS site.  Whatever functionality the theme defines will then be available in their site.
-
-However, we are in catch-22 situation.  We want to install the theme as we would an NPM module but we haven't written it yet and haven't posted it to NPM so how do we pull it into the site while we are building it?
+However, we are in catch-22 situation. We want to install the theme as we would an NPM module but we haven't written it yet and haven't posted it to NPM so how do we pull it into the site while we are building it?
 
 The answer is "yarn workspaces".
-
 
 ## Setup yarn workspace
 
@@ -33,14 +31,14 @@ npm init
 Run through whatever your standard responses to `init` are:
 
 ```bash
-package name: (theme-project) 
-version: (1.0.0) 
-description: 
-entry point: (index.js) 
-test command: 
-git repository: 
-keywords: 
-license: (MIT) 
+package name: (theme-project)
+version: (1.0.0)
+description:
+entry point: (index.js)
+test command:
+git repository:
+keywords:
+license: (MIT)
 ```
 
 Edit `package.json`. Delete everything but name and version, add a private key and a workspaces key.
@@ -50,25 +48,21 @@ Edit `package.json`. Delete everything but name and version, add a private key a
   "private": "true",
   "name": "theme-project",
   "version": "1.0.0",
-  "workspaces": [
-      "gatsby-site",
-      "packages/*"
-  ]
+  "workspaces": ["gatsby-site", "packages/*"]
 }
 ```
 
 We have defined two different workspaces so lets create both of them.
 
-```bash 
+```bash
 mkdir gatsby-site && mkdir packages
 ```
 
 Workspaces are named locations that yarn is aware of.
 
-
 ## Setup our theme folder
 
-We need somewhere to put our future node modules as we develop them.  Since they will end up being node packages lets put them in a folder called packages.
+We need somewhere to put our future node modules as we develop them. Since they will end up being node packages lets put them in a folder called packages.
 
 ```bash
 cd packages
@@ -86,7 +80,7 @@ We'll call it `gatsby-theme-mdx` because it will add basic `mdx` processing of m
 >
 > The word "theme" makes me thing of "css" and layout and design assets.
 >
-> However, a gatsby theme adds functionality to a Gatsby site.  It might be a set of design tokens and assets and components that define the look and feel of a site, but you should think of it as a packaging up of any functionality you might want to add to more than one site.
+> However, a gatsby theme adds functionality to a Gatsby site. It might be a set of design tokens and assets and components that define the look and feel of a site, but you should think of it as a packaging up of any functionality you might want to add to more than one site.
 
 ```bash
 cd gatsby-theme-mdx
@@ -114,13 +108,13 @@ Respond as usual to the prompts
 }
 ```
 
-Note that we are declaring the main entry point to be `index.js`.  There are two  reasons for this.  First, NPM/Node recognizes a module by its entry point.  The default is `index.js`.  
+Note that we are declaring the main entry point to be `index.js`. There are two reasons for this. First, NPM/Node recognizes a module by its entry point. The default is `index.js`.
 
 GatsbyJS instead looks for `gatsby-config.js` in a plugin module or a theme module and so doesn't require an `index.js` .
 
 So, to satisfy NPM/Node many GatsbyJS plugins contain an `index.js` file with the comment `// no-ops` to indicate that the file serves no useful purpose to GatsbyJS.
 
-The second reason to have `index.js` is to allow us to export something from the theme at some point in the future.  We will cover that later.
+The second reason to have `index.js` is to allow us to export something from the theme at some point in the future. We will cover that later.
 
 ```bash
 touch index.js
@@ -131,8 +125,6 @@ touch index.js
 ```javascript
 // no-op
 ```
-
-
 
 ## Setup our site folder
 
@@ -181,27 +173,25 @@ So, now we have this tree:
         └── package.json
 ```
 
-
-
 Lets install GatsbyJS
 
 ```bash
 cd gatsby-site/
 ```
 
-Here is where we begin to use workspaces.  We have three different places containing a `package.json` file.  Yarn will be aware of each of these:
+Here is where we begin to use workspaces. We have three different places containing a `package.json` file. Yarn will be aware of each of these:
 
-- Our `theme-project` folder.  This is where we define our workspaces.
+- Our `theme-project` folder. This is where we define our workspaces.
 - Our `gatsby-site` folder.
 - Our `gatsby-theme-mdx` folder where we will build a theme.
 
-It would be painful to have to `cd` into these folders or specify their path everytime we wanted to execute a `yarn` command relative to each of those folders.  But since we defined the workspaces we can execute `yarn` commands in any workspace using a simple referencing the workspace.  Like this:
+It would be painful to have to `cd` into these folders or specify their path everytime we wanted to execute a `yarn` command relative to each of those folders. But since we defined the workspaces we can execute `yarn` commands in any workspace using a simple referencing the workspace. Like this:
 
 ```bash
 yarn workspace gatsby-site add gatsby
 ```
 
-Now lets add the theme to the Gatsby site.  We can add it as a dependancy:
+Now lets add the theme to the Gatsby site. We can add it as a dependancy:
 
 @ `gatsby-site/package.json`
 
@@ -216,7 +206,7 @@ Now lets add the theme to the Gatsby site.  We can add it as a dependancy:
 }
 ```
 
-We add this as a dependancy to the `package.json ` file because the module is stored locally in our "packages" folder.  If we try `yarn add gatsby-theme-mdx` yarn will try first to find the module on npm.  If your package in develpment has the same name  as a package on npm the wrong one will be loaded into your project…  
+We add this as a dependancy to the `package.json ` file because the module is stored locally in our "packages" folder. If we try `yarn add gatsby-theme-mdx` yarn will try first to find the module on npm. If your package in develpment has the same name as a package on npm the wrong one will be loaded into your project…
 
 Obviously, our theme is not on npm but it is in the `packages` folder and it does have a valid entry point so yarn will find it when we add it as a dependancy.
 
@@ -232,8 +222,6 @@ We will want to work with our Gatsby site so lets add the standard Gatsby comman
     "test": "echo \"Error: no test specified\" && exit 1"
   },
 ```
-
-
 
 ## Add some dependancies
 
@@ -303,19 +291,15 @@ And they should also be declared as `dev` and `peer` dependancies
 }
 ```
 
-
-
-Lets add the dependancies we need to the gatsby site as well. 
+Lets add the dependancies we need to the gatsby site as well.
 
 ```bash
 yarn workspace gatsby-site add react react-dom
 ```
 
-
-
 ## Develop the theme
 
-Our first goal is have a theme that will add MDX processing of markdown files to a GatsbyJS site.  So in the theme lets add an `.mdx` file that needs processing.
+Our first goal is have a theme that will add MDX processing of markdown files to a GatsbyJS site. So in the theme lets add an `.mdx` file that needs processing.
 
 In the theme create `src/pages/index.mdx`
 
@@ -337,7 +321,7 @@ And we also need to add these dependancies
 yarn workspace gatsby-theme-mdx add @mdx-js/mdx @mdx-js/tag
 ```
 
-This is because `gatsby-mdx` is designed to allow for swapping out various processing modules for greater flexibility.  We are going to process `.mdx` files, for which `gatsby-mdx` will use `@mdx-js/mdx` and we are going to replace HTML tags in markdown (like `h1`) with react components we get to define, and for that  `gatsby-mdx` will use `@mdx-js/tag`.
+This is because `gatsby-mdx` is designed to allow for swapping out various processing modules for greater flexibility. We are going to process `.mdx` files, for which `gatsby-mdx` will use `@mdx-js/mdx` and we are going to replace HTML tags in markdown (like `h1`) with react components we get to define, and for that `gatsby-mdx` will use `@mdx-js/tag`.
 
 Next we need to make Gatsby aware of the module we just added.
 
@@ -348,15 +332,15 @@ module.exports = {
   plugins: [
     {
       resolve: "gatsby-mdx",
-      options: {}
-    }
-  ]
+      options: {},
+    },
+  ],
 };
 ```
 
 Now, by default a Gatsby site looks in `src/pages` to find and process `.md` or `.mdx` files.
 
-We need to tell Gatsby to look in another location for files to process (specfically, it should look in our theme.)  That is what `gatsby-plugin-page-creator` is designed to do.
+We need to tell Gatsby to look in another location for files to process (specfically, it should look in our theme.) That is what `gatsby-plugin-page-creator` is designed to do.
 
 Lets install that in our theme.
 
@@ -373,7 +357,7 @@ module.exports = {
   plugins: [
     {
       resolve: "gatsby-mdx",
-      options: {}
+      options: {},
     },
     // You can have multiple instances of this plugin
     // to create pages from React components in different directories.
@@ -383,22 +367,22 @@ module.exports = {
     {
       resolve: `gatsby-plugin-page-creator`,
       options: {
-        path: `${__dirname}/src/pages`
-      }
-    }
-  ]
+        path: `${__dirname}/src/pages`,
+      },
+    },
+  ],
 };
 ```
 
 This path://
 
 ```javascript
-path: `${__dirname}/src/pages`
+path: `${__dirname}/src/pages`;
 ```
 
 is relative to the theme folder so MDX in Gatbsy will now be looking for files in the theme pages folder.
 
-Lastly, if you recall we added the theme to the Gatsby site as a dependancy.  The theme is a plugin, and like any plugin we need to tell Gatsby of its existance so create a `gatsby-config.js` file in the gatsby-site folder:
+Lastly, if you recall we added the theme to the Gatsby site as a dependancy. The theme is a plugin, and like any plugin we need to tell Gatsby of its existance so create a `gatsby-config.js` file in the gatsby-site folder:
 
 @ `gatsby-site`
 
@@ -410,7 +394,7 @@ and add the theme...
 
 ```javascript
 module.exports = {
-  __experimentalThemes: ["gatsby-theme-mdx"]
+  plugins: ["gatsby-theme-mdx"],
 };
 ```
 
@@ -432,15 +416,13 @@ We check the workspace sestup with
 yarn workspaces info
 ```
 
-
-
 @ theme-project
 
 ```bash
 yarn workspace gatsby-site develop
 ```
 
-Success! 
+Success!
 
 You should now be able to go to `localhost:8000` and see the page generated from the `.mdx` file in the theme folder.
 
@@ -451,4 +433,3 @@ You should now be able to go to `localhost:8000` and see the page generated from
 - we have a model for a how a theme can add content (a folder of MDX files in the theme,) thanks to `gatsby-plugin-page-creator`
 
 Thats really fantastic, because you can now compartmentalize the development of complex apps. You can write a different module for commerce, podcasting, documentation, etc and pull these into a blank gatsby site, instantally adding that functionality.
-

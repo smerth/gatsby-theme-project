@@ -6,8 +6,8 @@
     "develop": "yarn workspace site develop",
     "clean": "yarn workspace site clean",
     "info": "yarn workspace site gatsby info",
-    "build-parakeet": "yarn workspace site build",
-    "serve-parakeet": "yarn workspace site serve"
+    "build": "yarn workspace site build",
+    "serve": "yarn workspace site serve"
   },
   "workspaces": [
     "packages/*"

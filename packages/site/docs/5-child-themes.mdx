@@ -1,12 +1,12 @@
 # 5) Child themes
 
-Lets say we want to build several sites. We want to add a theme to each of those sites so that they each get the same functionality.  However for a few of the sites we wish we could modify just some portion of the theme.
+Lets say we want to build several sites. We want to add a theme to each of those sites so that they each get the same functionality. However for a few of the sites we wish we could modify just some portion of the theme.
 
 It would be useful if we could make a child theme that would either override something from the first theme or maybe augment it.
 
 ## Create child theme
 
-Lets make a child theme.  In the `packages` folder create new child theme folder
+Lets make a child theme. In the `packages` folder create new child theme folder
 
 ```bash
 mkdir gatsby-theme-mdx-child
@@ -52,7 +52,7 @@ Add the dev and peer dependancies we are using in our site.
 }
 ```
 
-Add the main theme as  a dependancy so it gets installed if the child is installed
+Add the main theme as a dependancy so it gets installed if the child is installed
 
 ```json
 "dependancies": {
@@ -66,7 +66,7 @@ Add `gatsby-config.js`
 
 ```javascript
 module.exports = {
-  __experimentalThemes: ["gatsby-theme-mdx"]
+  plugins: ["gatsby-theme-mdx"],
 };
 ```
 
@@ -80,7 +80,7 @@ Just to see if everything is working lets set the gatsby-site to pull in the chi
 
 ```javascript
 module.exports = {
-  __experimentalThemes: ["gatsby-theme-mdx-child"]
+  plugins: ["gatsby-theme-mdx-child"],
 };
 ```
 
@@ -140,8 +140,6 @@ yarn workspace gatsby-site develop
 
 And the site is running fine.
 
-
-
 ## Add mdx processing to the child theme
 
 First let's get the child theme processing `.mdx` files.
@@ -158,22 +156,21 @@ In the child theme, add the page creator and configure to source to the local pa
 
 ```javascript
 module.exports = {
-  __experimentalThemes: ["gatsby-theme-mdx"],
   plugins: [
-          // You can have multiple instances of this plugin
+    ["gatsby-theme-mdx"],
+    // You can have multiple instances of this plugin
     // to create pages from React components in different directories.
     //
     // The following sets up the pattern of having multiple
     // "pages" directories in your project
     {
-        resolve: `gatsby-plugin-page-creator`,
-        options: {
-          path: `${__dirname}/src/pages`
-        }
-      }
-  ]
+      resolve: `gatsby-plugin-page-creator`,
+      options: {
+        path: `${__dirname}/src/pages`,
+      },
+    },
+  ],
 };
-
 ```
 
 Test by adding a page
@@ -194,12 +191,9 @@ This is some content that doesn't need to be in a box.
 <Box>Yeah the test page is live!!!</Box>
 
 This is some content that doesn't need to be in a box.
-
 ```
 
-So we have the child theme processing MDX files from the `src/pages/` directory within itself. 
-
-
+So we have the child theme processing MDX files from the `src/pages/` directory within itself.
 
 ## Add a basic documentation setup to the child theme
 
@@ -215,7 +209,7 @@ Lets set up the child theme to process a folder of `.mdx` files in the site.
 Some meaningful writing!
 ```
 
-To generate pages programatically we need to add `gatsby-source-filesystem` to the child theme so that the  designated `.mdx` files will be added to the GatsbyJS data graph
+To generate pages programatically we need to add `gatsby-source-filesystem` to the child theme so that the designated `.mdx` files will be added to the GatsbyJS data graph
 
 add `gatsby-source-filesystem` to child theme
 
@@ -243,9 +237,9 @@ Even though we are placing this config in the child theme the path here is relat
 
 Now the `.mdx` files @ `gatsby-site/docs` in the site should be added as nodes to Gatsby's GraphQL.
 
-We can find them with this query.  GraphQL query:
+We can find them with this query. GraphQL query:
 
-```json
+```javascript
 {
   allFile(filter: {sourceInstanceName: {eq: "docs"}}) {
     edges {
@@ -307,13 +301,11 @@ export { default as Layout } from "./src/components/layout";
 export { default as colors } from "./src/tokens/colors";
 ```
 
-
-
 Next we create a template to process the content of our mdx files.
 
 @ `gatsby-theme-mdx-child/src/templates/doc.js`
 
-```jsx
+```javascript
 import React from "react";
 import MDXRenderer from "gatsby-mdx/mdx-renderer";
 import { Layout } from "gatsby-theme-mdx";
@@ -323,22 +315,19 @@ export default ({ pageContext }) => (
     <MDXRenderer>{pageContext.body}</MDXRenderer>
   </Layout>
 );
-
 ```
 
 The thing to note here is the use of `MDXRenderer` .
 
-Now all that remains is to create pages. 
+Now all that remains is to create pages.
 
 ## Programmatically create pages
-
-
 
 Add `gatsby-node.js` file at the root of the child theme
 
 @ `gatsby-theme-mdx-child/gatsby-config.js`
 
-```jsx
+```javascript
 exports.createPages = async ({ graphql, actions }) => {
   const results = await graphql(`
     {
@@ -358,34 +347,29 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   `);
 
-  console.log(Object.keys(results));
+  // console.log(Object.keys(results));
 
   const pages = results.data.allFile.edges.map(({ node }) => node);
 
-  pages.forEach(page => {
+  pages.forEach((page) => {
     actions.createPage({
       path: `documentation/${page.name}`,
       component: require.resolve("./src/templates/doc.js"),
       context: {
-        body: page.childMdx.code.body
-      }
+        body: page.childMdx.code.body,
+      },
     });
   });
 };
-
 ```
-
-
 
 # Conclusion
 
-
-
 And there we have it!
 
-OK, so that was alot of stuff...   Exactly what stuff have we accomplished?
+OK, so that was alot of stuff... Exactly what stuff have we accomplished?
 
-- We have a `gatsby-theme-mdx`. 
+- We have a `gatsby-theme-mdx`.
   - It adds MDX processing to a gatsby site
   - It adds and exports some design tokens that can be consumed in the site
   - It adds components to be used in a markdown document
@@ -393,11 +377,8 @@ OK, so that was alot of stuff...   Exactly what stuff have we accomplished?
 - We have a `gatsby-theme-mdx-child` theme which adds MDX processing based of a `docs` file in the site
 - We have a gatsby site that contains 3 files: `gatsby-config.js`, `gatsby-node.js` and a docs folder
 
-The main point here was not to build a useful and functional website or app.  The point was to show the way in which Gatsby themes can be used to build sites with remarkably flexible and useful architecture.  
+The main point here was not to build a useful and functional website or app. The point was to show the way in which Gatsby themes can be used to build sites with remarkably flexible and useful architecture.
 
 And in addition to show how MDX is a very powerful tool for turning markdown into an accessible source of textual data.
 
 That's the tip of the iceberg, watch this space!
-
-
-

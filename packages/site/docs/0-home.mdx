@@ -12,7 +12,7 @@ The theme `gatsby-theme-mdx` enables MDX processing of markdown pages and define
 
 The child theme implements `gatsby-source-filesystem` so that `.mdx` files added to the docs folder in gatsby-site are added to the GraphQL. It also provides a template for those docs pages:
 
-```jsx
+```javascript
 import React from "react";
 import MDXRenderer from "gatsby-mdx/mdx-renderer";
 import { Layout } from "gatsby-theme-mdx";
@@ -26,7 +26,7 @@ export default ({ pageContext }) => (
 
 and a `gatsby-node.js` file to implement pageCreate
 
-```jsx
+```javascript
 exports.createPages = async ({ graphql, actions }) => {
   const results = await graphql(`
     {
@@ -46,17 +46,17 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   `);
 
-  console.log(Object.keys(results));
+  // console.log(Object.keys(results));
 
   const pages = results.data.allFile.edges.map(({ node }) => node);
 
-  pages.forEach(page => {
+  pages.forEach((page) => {
     actions.createPage({
       path: `documentation/${page.name}`,
       component: require.resolve("./src/templates/doc.js"),
       context: {
-        body: page.childMdx.code.body
-      }
+        body: page.childMdx.code.body,
+      },
     });
   });
 };

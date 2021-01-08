@@ -1,6 +1,6 @@
 module.exports = {
-  __experimentalThemes: ["gatsby-theme-mdx"],
   plugins: [
+    "gatsby-theme-mdx",
     // You can have multiple instances of this plugin
     // to create pages from React components in different directories.
     //
@@ -9,8 +9,8 @@ module.exports = {
     {
       resolve: `gatsby-plugin-page-creator`,
       options: {
-        path: `${__dirname}/src/pages`
-      }
+        path: `${__dirname}/src/pages`,
+      },
     },
     // source files
     {
@@ -18,8 +18,8 @@ module.exports = {
       options: {
         name: "docs",
         // this path is relative to the gatsby site running the child theme
-        path: `docs`
-      }
-    }
-  ]
+        path: `docs`,
+      },
+    },
+  ],
 };

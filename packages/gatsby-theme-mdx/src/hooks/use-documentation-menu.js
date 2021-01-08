@@ -1,6 +1,6 @@
 import { useStaticQuery, graphql } from "gatsby";
 
-export const getDocumentationMenu = () => {
+export const useDocumentationMenu = () => {
   const { allFile } = useStaticQuery(
     graphql`
       query GetDocsMenu {

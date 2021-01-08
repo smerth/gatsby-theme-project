@@ -1,9 +1,9 @@
 import React from "react";
-import { getDocumentationMenu } from "../hooks/get-documentation-menu";
+import { useDocumentationMenu } from "../hooks/use-documentation-menu";
 import { Link } from "gatsby";
 
 export default () => {
-  const { edges } = getDocumentationMenu();
+  const { edges } = useDocumentationMenu();
   // console.log(edges);
   return (
     <ul>

@@ -5,6 +5,8 @@ import H1 from "./H1";
 import H2 from "./H2";
 import styled from "styled-components";
 import Navigation from "./navigation";
+import { colors } from "gatsby-theme-mdx";
+import { Link } from "gatsby";
 
 const systemFont =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
@@ -17,14 +19,30 @@ const P = styled.p`
 const components = {
   h1: H1,
   h2: H2,
-  p: P
+  p: P,
 };
 
 export default ({ children, className }) => (
   <MDXProvider components={components}>
     <div class="centered">
       <div class="site-branding">
-        <h1 class="site-title">GatsbyJS: Theme Development Demo</h1>
+        <Link
+          to="/"
+          style={{
+            textDecoration: "none",
+          }}
+        >
+          <h1
+            // class="site-title"
+            style={{
+              fontFamily: systemFont,
+              fontSize: "4rem",
+              color: colors.title,
+            }}
+          >
+            GatsbyJS: Sub-Theme Development Demo
+          </h1>
+        </Link>
       </div>
     </div>
     <Content>

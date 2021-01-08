@@ -1,3 +1,3 @@
 module.exports = {
-  __experimentalThemes: ["gatsby-theme-mdx-child"]
+  plugins: ["gatsby-theme-mdx-child"],
 };
